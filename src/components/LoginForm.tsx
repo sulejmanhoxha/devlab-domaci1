@@ -28,7 +28,7 @@ export default function LoginForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
   });
@@ -88,10 +88,11 @@ export default function LoginForm() {
 
         <div>
           <button
+            disabled={isSubmitting}
             type="submit"
             className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Login
+            {isSubmitting ? "Loading..." : "Login"}
           </button>
         </div>
       </form>
