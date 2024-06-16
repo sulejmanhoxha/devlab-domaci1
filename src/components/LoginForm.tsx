@@ -1,10 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { z } from "zod";
 
-import { useGlobalContext } from "../context/GlobalContext";
+import { useGlobalContext } from "../hooks/useGlobalContext";
 import { login } from "../lib/api";
 
 const loginSchema = z
@@ -23,8 +24,9 @@ const loginSchema = z
 export type LoginSchemaType = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
-  const { setRefreshToken, setAccessToken } = useGlobalContext();
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
+
+  const { setRefreshToken } = useGlobalContext();
   const {
     register,
     handleSubmit,
@@ -32,19 +34,22 @@ export default function LoginForm() {
   } = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
   });
-  const onSubmit = async (data: LoginSchemaType) => {
-    try {
-      const userAuthTokens = await login(data);
 
-      const refreshToken = userAuthTokens.refresh_token;
-      const access = userAuthTokens.access_token;
-      setRefreshToken(refreshToken);
-      setAccessToken(access);
-      navigate("/");
-      toast.success("Login was successful.");
-    } catch (error) {
+  const loginMutation = useMutation({
+    mutationKey: ["token"],
+    mutationFn: (data: LoginSchemaType) => login(data),
+    onError: (error) => {
       toast.error(`Login failed. ${error?.toString()}. Incorrect credentials.`);
-    }
+    },
+    onSuccess: (data) => {
+      navigate("/");
+      setRefreshToken(data.refresh_token);
+      toast.success("Login was successful.");
+    },
+  });
+
+  const onSubmit = (data: LoginSchemaType) => {
+    loginMutation.mutate(data);
   };
 
   return (

@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 
-import { useGlobalContext } from "../context/GlobalContext";
+import { useGlobalContext } from "../hooks/useGlobalContext";
 
 export default function HomePage() {
-  const { userInfo, accessToken, refreshToken, logout } = useGlobalContext();
+  const { userQuery, tokenQuery, logout } = useGlobalContext();
 
   return (
     <div className="bg-white">
@@ -25,17 +25,36 @@ export default function HomePage() {
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
               Welcome Back
             </h1>
-            <div className="mx-auto my-10">
-              <img
-                className="mx-auto h-32 w-32 rounded-full"
-                src={userInfo.avatar}
-                alt="Profile picture"
-              />
-              <h2 className="mt-3 text-center text-2xl font-semibold">
-                {userInfo.name}
-              </h2>
-              <p className="mt-1 text-center text-gray-600">{userInfo.role}</p>
-            </div>
+
+            {userQuery.isError ? (
+              <p className="text-3xl text-red-600">Error fetching data</p>
+            ) : (
+              ""
+            )}
+            {userQuery.isPending ? (
+              <p className="text-xl text-sky-500">Loading data...</p>
+            ) : (
+              ""
+            )}
+
+            {userQuery.isSuccess ? (
+              <div className="mx-auto my-10">
+                <img
+                  className="mx-auto h-32 w-32 rounded-full"
+                  src={userQuery.data.avatar}
+                  alt="Profile picture"
+                />
+                <h2 className="mt-3 text-center text-2xl font-semibold">
+                  {userQuery.data.name}
+                </h2>
+                <p className="mt-1 text-center text-gray-600">
+                  {userQuery.data.role}
+                </p>
+              </div>
+            ) : (
+              ""
+            )}
+
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link
                 className="z-50 rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -57,17 +76,32 @@ export default function HomePage() {
                 Your credentials and id
               </p>
 
-              <pre className="whitespace-pre-wrap break-words text-gray-50">
-                {JSON.stringify(
-                  {
-                    id: userInfo.id,
-                    email: userInfo.email,
-                    password: userInfo.password,
-                  },
-                  null,
-                  4,
-                )}
-              </pre>
+              {userQuery.isError ? (
+                <p className="text-3xl text-red-600">Error fetching data</p>
+              ) : (
+                ""
+              )}
+              {userQuery.isPending ? (
+                <p className="text-xl text-sky-500">Loading data...</p>
+              ) : (
+                ""
+              )}
+
+              {userQuery.isSuccess ? (
+                <pre className="whitespace-pre-wrap break-words text-gray-50">
+                  {JSON.stringify(
+                    {
+                      id: userQuery.data.id,
+                      email: userQuery.data.email,
+                      password: userQuery.data.password,
+                    },
+                    null,
+                    4,
+                  )}
+                </pre>
+              ) : (
+                ""
+              )}
             </div>
 
             <div className="mt-10 space-y-4 rounded-md bg-[#192231] p-6 text-start">
@@ -75,13 +109,31 @@ export default function HomePage() {
                 Auth tokens
               </p>
 
-              <pre className="whitespace-pre-wrap break-words text-gray-50">
-                {JSON.stringify(
-                  { access_token: accessToken, refresh_token: refreshToken },
-                  null,
-                  4,
-                )}
-              </pre>
+              {tokenQuery.isError ? (
+                <p className="text-3xl text-red-600">Error fetching data</p>
+              ) : (
+                ""
+              )}
+              {tokenQuery.isPending ? (
+                <p className="text-xl text-sky-500">Loading data...</p>
+              ) : (
+                ""
+              )}
+
+              {tokenQuery.isSuccess ? (
+                <pre className="whitespace-pre-wrap break-words text-gray-50">
+                  {JSON.stringify(
+                    {
+                      access_token: tokenQuery.data.access_token,
+                      refresh_token: tokenQuery.data.refresh_token,
+                    },
+                    null,
+                    4,
+                  )}
+                </pre>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         </div>

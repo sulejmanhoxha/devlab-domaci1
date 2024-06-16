@@ -43,7 +43,7 @@ export default function ChangePasswordForm() {
       currentPassword: "",
     },
   });
-  const onSubmit = async (data: LoginSchemaType) => {
+  const onSubmit = async () => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     try {

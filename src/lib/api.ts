@@ -3,7 +3,7 @@ import { UserInfo } from "../context/GlobalContext";
 
 const API_BASE_URL = "https://api.escuelajs.co";
 
-type UserTokensType = {
+export type UserTokensType = {
   access_token: string;
   refresh_token: string;
 };

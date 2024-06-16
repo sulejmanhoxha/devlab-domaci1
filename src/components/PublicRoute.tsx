@@ -2,10 +2,12 @@ import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { useGlobalContext } from "../context/GlobalContext";
+import { useGlobalContext } from "../hooks/useGlobalContext";
 
 const PublicRoute = ({ children }: { children: JSX.Element }) => {
-  const { accessToken } = useGlobalContext();
+  const { tokenQuery } = useGlobalContext();
+
+  const accessToken = tokenQuery.data?.access_token;
 
   useEffect(() => {
     if (accessToken) {
