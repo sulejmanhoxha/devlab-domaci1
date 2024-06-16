@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 
-import { useGlobalContext } from "../hooks/useGlobalContext";
+import { useAuth } from "../hooks/useAuth";
 
 export default function HomePage() {
-  const { userQuery, tokenQuery, logout } = useGlobalContext();
+  const { userQuery, tokenQuery, logout } = useAuth();
 
   return (
     <div className="bg-white">

@@ -5,7 +5,6 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 
 import App from "./App.tsx";
-import GlobalContextProvider from "./context/GlobalContext.tsx";
 import "./index.css";
 
 const queryClient = new QueryClient({
@@ -20,9 +19,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <GlobalContextProvider>
-          <App />
-        </GlobalContextProvider>
+        <App />
       </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

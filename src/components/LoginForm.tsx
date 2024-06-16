@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { z } from "zod";
 
-import { useGlobalContext } from "../hooks/useGlobalContext";
+import { useAuth } from "../hooks/useAuth";
 import { login } from "../lib/api";
 
 const loginSchema = z
@@ -26,7 +26,7 @@ export type LoginSchemaType = z.infer<typeof loginSchema>;
 export default function LoginForm() {
   const navigate = useNavigate();
 
-  const { setRefreshToken } = useGlobalContext();
+  const { setRefreshToken } = useAuth();
   const {
     register,
     handleSubmit,
