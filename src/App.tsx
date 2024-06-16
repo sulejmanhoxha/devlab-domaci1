@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
 import GlobalContextProvider from "./context/GlobalContext";
+import ChangePasswordPage from "./pages/ChangePassword";
 import HomePage from "./pages/Home";
 import LoginPage from "./pages/Login";
 
@@ -21,6 +22,7 @@ const App = () => {
               </PrivateRoute>
             }
           />
+          <Route path="/change-password" element={<ChangePasswordPage />} />
           <Route
             path="/login"
             element={
