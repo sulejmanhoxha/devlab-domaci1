@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLocalStorage } from "react-use";
 
 import { getAccessToken, getUserDetails } from "../lib/api";
 
@@ -37,11 +38,11 @@ export default function GlobalContextProvider({
 }: GlobalContextProviderProps) {
   const navigate = useNavigate();
 
-  // get the refresh token when the user visits the page
-  const [refreshToken, setRefreshToken] = useState<string>(() => {
-    const savedRefreshToken = localStorage.getItem("refreshToken");
-    return savedRefreshToken ? savedRefreshToken : "";
-  });
+  const [refreshToken, setRefreshToken, removeRefreshToken] = useLocalStorage(
+    "refreshToken",
+    "",
+    { raw: true },
+  );
 
   const [accessToken, setAccessToken] = useState("");
 
@@ -66,7 +67,7 @@ export default function GlobalContextProvider({
     });
     setAccessToken("");
     setRefreshToken("");
-    localStorage.removeItem("refreshToken");
+    removeRefreshToken();
     navigate("/login");
   };
 
@@ -117,10 +118,6 @@ export default function GlobalContextProvider({
     }
   }, [accessToken]);
 
-  useEffect(() => {
-    localStorage.setItem("refreshToken", refreshToken);
-  }, [refreshToken]);
-
   return (
     <GlobalContext.Provider
       value={{
@@ -129,6 +126,7 @@ export default function GlobalContextProvider({
         setAccessToken,
         refreshToken,
         setRefreshToken,
+        removeRefreshToken,
 
         // user
         userInfo,
